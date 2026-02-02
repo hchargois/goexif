@@ -245,9 +245,9 @@ func Decode(r io.Reader) (*Exif, error) {
 	// Put the header bytes back into the reader.
 	r = io.MultiReader(bytes.NewReader(header), r)
 	var (
-		er  *bytes.Reader
 		tif *tiff.Tiff
 		sec *appSec
+		raw []byte
 	)
 
 	switch {
@@ -267,7 +267,10 @@ func Decode(r io.Reader) (*Exif, error) {
 		b := &bytes.Buffer{}
 		tr := io.TeeReader(r, b)
 		tif, err = tiff.Decode(tr)
-		er = bytes.NewReader(b.Bytes())
+		if err != nil {
+			return nil, decodeError{cause: err}
+		}
+		raw = b.Bytes()
 	case assumeJPEG:
 		// Locate the JPEG APP1 header.
 		sec, err = newAppSec(jpeg_APP1, r)
@@ -275,21 +278,14 @@ func Decode(r io.Reader) (*Exif, error) {
 			return nil, err
 		}
 		// Strip away EXIF header.
-		er, err = sec.exifReader()
+		raw, err = sec.exif()
 		if err != nil {
 			return nil, err
 		}
-		tif, err = tiff.Decode(er)
-	}
-
-	if err != nil {
-		return nil, decodeError{cause: err}
-	}
-
-	er.Seek(0, 0)
-	raw, err := io.ReadAll(er)
-	if err != nil {
-		return nil, decodeError{cause: err}
+		tif, err = tiff.Decode(bytes.NewReader(raw))
+		if err != nil {
+			return nil, decodeError{cause: err}
+		}
 	}
 
 	// build an exif structure from the tiff
@@ -628,17 +624,15 @@ func newAppSec(marker byte, r io.Reader) (*appSec, error) {
 	return app, nil
 }
 
-// exifReader returns a reader on this appSec with the read cursor advanced to
-// the start of the exif's tiff encoded portion.
-func (app *appSec) exifReader() (*bytes.Reader, error) {
+// exif returns the exif's tiff encoded portion.
+func (app *appSec) exif() ([]byte, error) {
 	if len(app.data) < 6 {
 		return nil, errors.New("exif: failed to find exif intro marker")
 	}
 
 	// read/check for exif special mark
-	exif := app.data[:6]
-	if !bytes.Equal(exif, append([]byte("Exif"), 0x00, 0x00)) {
+	if !bytes.HasPrefix(app.data, []byte("Exif\x00\x00")) {
 		return nil, errors.New("exif: failed to find exif intro marker")
 	}
-	return bytes.NewReader(app.data[6:]), nil
+	return app.data[6:], nil
 }
