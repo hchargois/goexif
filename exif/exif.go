@@ -282,7 +282,7 @@ func Decode(r io.Reader) (*Exif, error) {
 		if err != nil {
 			return nil, err
 		}
-		tif, err = tiff.Decode(bytes.NewReader(raw))
+		tif, err = tiff.DecodeBytes(raw)
 		if err != nil {
 			return nil, decodeError{cause: err}
 		}

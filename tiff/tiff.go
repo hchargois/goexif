@@ -34,13 +34,19 @@ func Decode(r io.Reader) (*Tiff, error) {
 	if err != nil {
 		return nil, errors.New("tiff: could not read data")
 	}
+	return DecodeBytes(data)
+}
+
+// DecodeBytes does the same as Decode but should be used when you have the
+// entire tiff data in a byte slice.
+func DecodeBytes(data []byte) (*Tiff, error) {
 	buf := bytes.NewReader(data)
 
 	t := new(Tiff)
 
 	// read byte order
 	bo := make([]byte, 2)
-	if _, err = io.ReadFull(buf, bo); err != nil {
+	if _, err := io.ReadFull(buf, bo); err != nil {
 		return nil, errors.New("tiff: could not read tiff byte order")
 	}
 	if string(bo) == "II" {
@@ -53,7 +59,7 @@ func Decode(r io.Reader) (*Tiff, error) {
 
 	// check for special tiff marker
 	var sp int16
-	err = binary.Read(buf, t.Order, &sp)
+	err := binary.Read(buf, t.Order, &sp)
 	if err != nil || 42 != sp {
 		return nil, errors.New("tiff: could not find special tiff marker")
 	}
