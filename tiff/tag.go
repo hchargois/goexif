@@ -146,18 +146,23 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 	if valLen > 4 {
 		binary.Read(r, order, &t.ValOffset)
 
-		// Use a bytes.Buffer so we don't allocate a huge slice if the tag
-		// is corrupt.
-		var buff bytes.Buffer
 		sr := io.NewSectionReader(r, int64(t.ValOffset), int64(valLen))
-		n, err := io.Copy(&buff, sr)
+		var n int
+		if valLen <= 32*1024 {
+			// if the length is < 32kiB, we'll trust it and allocate the slice;
+			t.Val = make([]byte, valLen)
+			n, err = io.ReadFull(sr, t.Val)
+		} else {
+			// otherwise we use a bytes.Buffer so we don't allocate a huge slice if the tag
+			// is corrupt.
+			t.Val, err = io.ReadAll(sr)
+			n = len(t.Val)
+		}
 		if err != nil {
 			return t, errors.New("tiff: tag value read failed: " + err.Error())
-		} else if n != int64(valLen) {
+		} else if n != int(valLen) {
 			return t, ErrShortReadTagValue
 		}
-		t.Val = buff.Bytes()
-
 	} else {
 		val := make([]byte, valLen)
 		if _, err = io.ReadFull(r, val); err != nil {
