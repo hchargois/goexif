@@ -58,6 +58,48 @@ func TestDecode(t *testing.T) {
 	}
 }
 
+func BenchmarkDecode(b *testing.B) {
+	fpath := filepath.Join(*dataDir, "samples")
+	dir, err := os.Open(fpath)
+	if err != nil {
+		b.Fatalf("Could not open sample directory '%s': %v", fpath, err)
+	}
+	defer dir.Close()
+
+	names, err := dir.Readdirnames(0)
+	if err != nil {
+		b.Fatalf("Could not read sample directory '%s': %v", fpath, err)
+	}
+
+	var files []*os.File
+	for _, name := range names {
+		if !strings.HasSuffix(name, ".jpg") {
+			continue
+		}
+		f, err := os.Open(filepath.Join(fpath, name))
+		if err != nil {
+			b.Fatal(err)
+		}
+		files = append(files, f)
+	}
+	defer func() {
+		for _, f := range files {
+			f.Close()
+		}
+	}()
+
+	for b.Loop() {
+		for _, f := range files {
+			if _, err := f.Seek(0, 0); err != nil {
+				b.Fatal(err)
+			}
+			if _, err := Decode(f); err != nil {
+				b.Fatal(err)
+			}
+		}
+	}
+}
+
 func TestDecodeRawEXIF(t *testing.T) {
 	rawFile := filepath.Join(*dataDir, "samples", "raw.exif")
 	raw, err := os.ReadFile(rawFile)
