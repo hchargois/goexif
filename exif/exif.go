@@ -620,15 +620,10 @@ func newAppSec(marker byte, r io.Reader) (*appSec, error) {
 	}
 
 	// read section data
-	nread := 0
-	for nread < dataLen {
-		s := make([]byte, dataLen-nread)
-		n, err := br.Read(s)
-		nread += n
-		if err != nil && nread < dataLen {
-			return nil, err
-		}
-		app.data = append(app.data, s[:n]...)
+	app.data = make([]byte, dataLen)
+	_, err := io.ReadFull(br, app.data)
+	if err != nil {
+		return nil, err
 	}
 	return app, nil
 }
