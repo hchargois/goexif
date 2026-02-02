@@ -1,7 +1,7 @@
 package exif
 
 var regressExpected = map[string]map[FieldName]string{
-	"2004-01-11-22-45-15-sep-2004-01-11-22-45-15a.jpg": map[FieldName]string{
+	"2004-01-11-22-45-15-sep-2004-01-11-22-45-15a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"2/1"`,
@@ -40,7 +40,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2006-08-03-16-29-38-sep-2006-08-03-16-29-38a.jpg": map[FieldName]string{
+	"2006-08-03-16-29-38-sep-2006-08-03-16-29-38a.jpg": {
 		ApertureValue:                    `"95/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -85,7 +85,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"180/1"`,
 	},
-	"2006-11-11-19-17-56-sep-2006-11-11-19-17-56a.jpg": map[FieldName]string{
+	"2006-11-11-19-17-56-sep-2006-11-11-19-17-56a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"4/1"`,
@@ -136,7 +136,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"300/1"`,
 	},
-	"2006-12-10-23-58-20-sep-2006-12-10-23-58-20a.jpg": map[FieldName]string{
+	"2006-12-10-23-58-20-sep-2006-12-10-23-58-20a.jpg": {
 		ApertureValue:                    `"95/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -181,7 +181,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"180/1"`,
 	},
-	"2006-12-17-07-09-14-sep-2006-12-17-07-09-14a.jpg": map[FieldName]string{
+	"2006-12-17-07-09-14-sep-2006-12-17-07-09-14a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"5725504/3145728"`,
@@ -226,7 +226,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2006-12-21-15-55-26-sep-2006-12-21-15-55-26a.jpg": map[FieldName]string{
+	"2006-12-21-15-55-26-sep-2006-12-21-15-55-26a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"8/1"`,
@@ -271,7 +271,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2007-01-01-12-00-00-sep-2007-01-01-12-00-00a.jpg": map[FieldName]string{
+	"2007-01-01-12-00-00-sep-2007-01-01-12-00-00a.jpg": {
 		ApertureValue:                    `"286/100"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -322,7 +322,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"480/1"`,
 	},
-	"2007-01-17-21-49-44-sep-2007-01-17-21-49-44a.jpg": map[FieldName]string{
+	"2007-01-17-21-49-44-sep-2007-01-17-21-49-44a.jpg": {
 		ApertureValue:                    `"33/10"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -366,7 +366,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"180/1"`,
 	},
-	"2007-02-02-18-13-29-sep-2007-02-02-18-13-29a.jpg": map[FieldName]string{
+	"2007-02-02-18-13-29-sep-2007-02-02-18-13-29a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"27033600/4915200"`,
@@ -411,7 +411,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"72/1"`,
 	},
-	"2007-05-02-17-02-21-sep-2007-05-02-17-02-21a.jpg": map[FieldName]string{
+	"2007-05-02-17-02-21-sep-2007-05-02-17-02-21a.jpg": {
 		ApertureValue:                    `"107/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -456,7 +456,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"180/1"`,
 	},
-	"2007-05-12-08-19-07-sep-2007-05-12-08-19-07a.jpg": map[FieldName]string{
+	"2007-05-12-08-19-07-sep-2007-05-12-08-19-07a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"252746/307200"`,
@@ -502,7 +502,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"72/1"`,
 	},
-	"2007-05-26-04-49-45-sep-2007-05-26-04-49-45a.jpg": map[FieldName]string{
+	"2007-05-26-04-49-45-sep-2007-05-26-04-49-45a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"4/1"`,
@@ -553,7 +553,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"300/1"`,
 	},
-	"2007-05-30-14-28-01-sep-2007-05-30-14-28-01a.jpg": map[FieldName]string{
+	"2007-05-30-14-28-01-sep-2007-05-30-14-28-01a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"2/1"`,
@@ -604,7 +604,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"300/1"`,
 	},
-	"2007-06-06-16-15-25-sep-2007-06-06-16-15-25a.jpg": map[FieldName]string{
+	"2007-06-06-16-15-25-sep-2007-06-06-16-15-25a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"2/1"`,
@@ -655,7 +655,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"300/1"`,
 	},
-	"2007-06-26-10-13-04-sep-2007-06-26-10-13-04a.jpg": map[FieldName]string{
+	"2007-06-26-10-13-04-sep-2007-06-26-10-13-04a.jpg": {
 		ApertureValue:                    `"3/1"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -699,7 +699,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"384/1"`,
 	},
-	"2007-07-13-17-02-30-sep-2007-07-13-17-02-30a.jpg": map[FieldName]string{
+	"2007-07-13-17-02-30-sep-2007-07-13-17-02-30a.jpg": {
 		ApertureValue:                    `"45/10"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -749,7 +749,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2007-08-15-14-42-46-sep-2007-08-15-14-42-46a.jpg": map[FieldName]string{
+	"2007-08-15-14-42-46-sep-2007-08-15-14-42-46a.jpg": {
 		ApertureValue:                    `"37/10"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -797,7 +797,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"230/1"`,
 	},
-	"2007-08-24-02-40-42-sep-2007-08-24-02-40-42a.jpg": map[FieldName]string{
+	"2007-08-24-02-40-42-sep-2007-08-24-02-40-42a.jpg": {
 		ApertureValue:                    `"213/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -842,7 +842,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"180/1"`,
 	},
-	"2007-11-07-11-40-44-sep-2007-11-07-11-40-44a.jpg": map[FieldName]string{
+	"2007-11-07-11-40-44-sep-2007-11-07-11-40-44a.jpg": {
 		ApertureValue:                    `"600/100"`,
 		BrightnessValue:                  `"906/100"`,
 		ColorSpace:                       `1`,
@@ -894,7 +894,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2008-06-02-10-03-57-sep-2008-06-02-10-03-57a.jpg": map[FieldName]string{
+	"2008-06-02-10-03-57-sep-2008-06-02-10-03-57a.jpg": {
 		ApertureValue:                    `"2970/1000"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -940,7 +940,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"288/3"`,
 	},
-	"2008-06-06-13-29-29-sep-2008-06-06-13-29-29a.jpg": map[FieldName]string{
+	"2008-06-06-13-29-29-sep-2008-06-06-13-29-29a.jpg": {
 		ApertureValue:                    `"116/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -986,7 +986,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"180/1"`,
 	},
-	"2008-06-17-01-21-30-sep-2008-06-17-01-21-30a.jpg": map[FieldName]string{
+	"2008-06-17-01-21-30-sep-2008-06-17-01-21-30a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"2/1"`,
@@ -1025,7 +1025,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2008-09-02-17-43-48-sep-2008-09-02-17-43-48a.jpg": map[FieldName]string{
+	"2008-09-02-17-43-48-sep-2008-09-02-17-43-48a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		DateTime:                         `"2008:09:02 17:43:48"`,
@@ -1050,7 +1050,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2009-03-26-09-23-20-sep-2009-03-26-09-23-20a.jpg": map[FieldName]string{
+	"2009-03-26-09-23-20-sep-2009-03-26-09-23-20a.jpg": {
 		ApertureValue:                    `"95/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1096,7 +1096,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"180/1"`,
 	},
-	"2009-04-11-03-01-38-sep-2009-04-11-03-01-38a.jpg": map[FieldName]string{
+	"2009-04-11-03-01-38-sep-2009-04-11-03-01-38a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"4/1"`,
@@ -1147,7 +1147,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"300/1"`,
 	},
-	"2009-04-23-07-21-35-sep-2009-04-23-07-21-35a.jpg": map[FieldName]string{
+	"2009-04-23-07-21-35-sep-2009-04-23-07-21-35a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"13301888/4915200"`,
@@ -1191,7 +1191,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2009-06-11-19-23-18-sep-2009-06-11-19-23-18a.jpg": map[FieldName]string{
+	"2009-06-11-19-23-18-sep-2009-06-11-19-23-18a.jpg": {
 		ApertureValue:                    `"11257/1627"`,
 		ColorSpace:                       `65535`,
 		DateTime:                         `"2009:06:23 18:42:05"`,
@@ -1219,7 +1219,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"3500000/10000"`,
 	},
-	"2009-06-20-07-59-05-sep-2009-06-20-07-59-05a.jpg": map[FieldName]string{
+	"2009-06-20-07-59-05-sep-2009-06-20-07-59-05a.jpg": {
 		ApertureValue:                    `"36/10"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1269,7 +1269,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"480/1"`,
 	},
-	"2009-08-05-08-11-31-sep-2009-08-05-08-11-31a.jpg": map[FieldName]string{
+	"2009-08-05-08-11-31-sep-2009-08-05-08-11-31a.jpg": {
 		ApertureValue:                    `"400/100"`,
 		BrightnessValue:                  `"719/100"`,
 		ColorSpace:                       `1`,
@@ -1321,7 +1321,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2010-06-08-04-44-24-sep-2010-06-08-04-44-24a.jpg": map[FieldName]string{
+	"2010-06-08-04-44-24-sep-2010-06-08-04-44-24a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"8/1"`,
@@ -1366,7 +1366,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2010-06-20-20-07-39-sep-2010-06-20-20-07-39a.jpg": map[FieldName]string{
+	"2010-06-20-20-07-39-sep-2010-06-20-20-07-39a.jpg": {
 		ApertureValue:                    `"116/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1412,7 +1412,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"4718592/65536"`,
 	},
-	"2010-09-02-08-43-02-sep-2010-09-02-08-43-02a.jpg": map[FieldName]string{
+	"2010-09-02-08-43-02-sep-2010-09-02-08-43-02a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"1/1"`,
@@ -1461,7 +1461,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2011-01-24-22-06-02-sep-2011-01-24-22-06-02a.jpg": map[FieldName]string{
+	"2011-01-24-22-06-02-sep-2011-01-24-22-06-02a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CustomRendered:                   `0`,
@@ -1488,7 +1488,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"300/1"`,
 	},
-	"2011-03-07-09-28-03-sep-2011-03-07-09-28-03a.jpg": map[FieldName]string{
+	"2011-03-07-09-28-03-sep-2011-03-07-09-28-03a.jpg": {
 		BrightnessValue:                  `"0/1024"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1523,7 +1523,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"72/1"`,
 	},
-	"2011-05-07-13-02-49-sep-2011-05-07-13-02-49a.jpg": map[FieldName]string{
+	"2011-05-07-13-02-49-sep-2011-05-07-13-02-49a.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		Contrast:                         `0`,
@@ -1562,7 +1562,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"72/1"`,
 	},
-	"2011-08-07-19-22-57-sep-2011-08-07-19-22-57a.jpg": map[FieldName]string{
+	"2011-08-07-19-22-57-sep-2011-08-07-19-22-57a.jpg": {
 		ApertureValue:                    `"433985/100000"`,
 		CFAPattern:                       `""`,
 		Contrast:                         `0`,
@@ -1607,7 +1607,7 @@ var regressExpected = map[string]map[FieldName]string{
 		XResolution:                      `"300/1"`,
 		YResolution:                      `"300/1"`,
 	},
-	"2011-10-28-17-50-18-sep-2011-10-28-17-50-18a.jpg": map[FieldName]string{
+	"2011-10-28-17-50-18-sep-2011-10-28-17-50-18a.jpg": {
 		ApertureValue:                    `"262144/65536"`,
 		ColorSpace:                       `65535`,
 		ComponentsConfiguration:          `""`,
@@ -1654,7 +1654,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"720000/10000"`,
 	},
-	"2011-10-28-18-25-43-sep-2011-10-28-18-25-43.jpg": map[FieldName]string{
+	"2011-10-28-18-25-43-sep-2011-10-28-18-25-43.jpg": {
 		CFAPattern:                       `""`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1710,7 +1710,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"300/1"`,
 	},
-	"2011-11-18-15-38-34-sep-Photo11181538.jpg": map[FieldName]string{
+	"2011-11-18-15-38-34-sep-Photo11181538.jpg": {
 		BrightnessValue:                  `"0/1024"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1745,7 +1745,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"72/1"`,
 	},
-	"2012-06-02-10-12-28-sep-2012-06-02-10-12-28.jpg": map[FieldName]string{
+	"2012-06-02-10-12-28-sep-2012-06-02-10-12-28.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		CompressedBitsPerPixel:           `"4/1"`,
@@ -1794,7 +1794,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"180/1"`,
 	},
-	"2012-09-21-22-07-34-sep-2012-09-21-22-07-34.jpg": map[FieldName]string{
+	"2012-09-21-22-07-34-sep-2012-09-21-22-07-34.jpg": {
 		ApertureValue:                    `"95/32"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1841,7 +1841,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"180/1"`,
 	},
-	"2012-12-19-21-38-40-sep-temple_square1.jpg": map[FieldName]string{
+	"2012-12-19-21-38-40-sep-temple_square1.jpg": {
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
 		DateTimeDigitized:                `"2012:12:19 21:38:40"`,
@@ -1876,7 +1876,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `1`,
 		YResolution:                      `"72/1"`,
 	},
-	"2012-12-21-11-15-19-sep-IMG_0001.jpg": map[FieldName]string{
+	"2012-12-21-11-15-19-sep-IMG_0001.jpg": {
 		ApertureValue:                    `"286720/65536"`,
 		Artist:                           `""`,
 		ColorSpace:                       `1`,
@@ -1926,7 +1926,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"72/1"`,
 	},
-	"2013-02-05-23-12-09-sep-DSCI0001.jpg": map[FieldName]string{
+	"2013-02-05-23-12-09-sep-DSCI0001.jpg": {
 		ApertureValue:                    `"3072/1000"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -1975,7 +1975,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"288/3"`,
 	},
-	"2099-08-12-19-59-29-sep-2099-08-12-19-59-29a.jpg": map[FieldName]string{
+	"2099-08-12-19-59-29-sep-2099-08-12-19-59-29a.jpg": {
 		CFAPattern:                       `""`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -2029,7 +2029,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"300/1"`,
 	},
-	"2216-11-15-11-46-51-sep-2216-11-15-11-46-51a.jpg": map[FieldName]string{
+	"2216-11-15-11-46-51-sep-2216-11-15-11-46-51a.jpg": {
 		ApertureValue:                    `"452/100"`,
 		ColorSpace:                       `1`,
 		ComponentsConfiguration:          `""`,
@@ -2079,7 +2079,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:                 `2`,
 		YResolution:                      `"480/1"`,
 	},
-	"FailedHash-NoDate-sep-remembory.jpg": map[FieldName]string{
+	"FailedHash-NoDate-sep-remembory.jpg": {
 		ExifIFDPointer:  `192`,
 		Make:            `"Brother"`,
 		Model:           `"MFC-7840W"`,
@@ -2091,7 +2091,7 @@ var regressExpected = map[string]map[FieldName]string{
 		XResolution:     `"150/1"`,
 		YResolution:     `"150/1"`,
 	},
-	"f1-exif.jpg": map[FieldName]string{
+	"f1-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:02"`,
@@ -2106,7 +2106,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"f2-exif.jpg": map[FieldName]string{
+	"f2-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:32"`,
@@ -2121,7 +2121,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"f3-exif.jpg": map[FieldName]string{
+	"f3-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:32"`,
@@ -2136,7 +2136,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"f4-exif.jpg": map[FieldName]string{
+	"f4-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:32"`,
@@ -2151,7 +2151,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"f5-exif.jpg": map[FieldName]string{
+	"f5-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:32"`,
@@ -2166,7 +2166,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"f6-exif.jpg": map[FieldName]string{
+	"f6-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:32"`,
@@ -2181,7 +2181,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"f7-exif.jpg": map[FieldName]string{
+	"f7-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:32"`,
@@ -2196,7 +2196,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"f8-exif.jpg": map[FieldName]string{
+	"f8-exif.jpg": {
 		ColorSpace:              `65535`,
 		ComponentsConfiguration: `""`,
 		DateTime:                `"2012:11:04 05:42:32"`,
@@ -2211,7 +2211,7 @@ var regressExpected = map[string]map[FieldName]string{
 		YCbCrPositioning:        `1`,
 		YResolution:             `"72/1"`,
 	},
-	"geodegrees_as_string.jpg": map[FieldName]string{
+	"geodegrees_as_string.jpg": {
 		ApertureValue:                    `"2048/1024"`,
 		Contrast:                         `0`,
 		DateTimeOriginal:                 `"2014:04:26 19:09:19"`,
@@ -2237,7 +2237,7 @@ var regressExpected = map[string]map[FieldName]string{
 		ThumbJPEGInterchangeFormatLength: `13132`,
 		WhiteBalance:                     `0`,
 	},
-	"has-lens-info.jpg": map[FieldName]string{
+	"has-lens-info.jpg": {
 		ApertureValue:                    `"4845/1918"`,
 		BrightnessValue:                  `"3927/419"`,
 		ColorSpace:                       `1`,

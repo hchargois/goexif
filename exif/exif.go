@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math"
 	"strconv"
 	"strings"
@@ -288,7 +287,7 @@ func Decode(r io.Reader) (*Exif, error) {
 	}
 
 	er.Seek(0, 0)
-	raw, err := ioutil.ReadAll(er)
+	raw, err := io.ReadAll(er)
 	if err != nil {
 		return nil, decodeError{cause: err}
 	}
@@ -415,12 +414,12 @@ func ratFloat(num, dem int64) float64 {
 // Tries to parse a Geo degrees value from a string as it was found in some
 // EXIF data.
 // Supported formats so far:
-// - "52,00000,50,00000,34,01180" ==> 52 deg 50'34.0118"
-//   Probably due to locale the comma is used as decimal mark as well as the
-//   separator of three floats (degrees, minutes, seconds)
-//   http://en.wikipedia.org/wiki/Decimal_mark#Hindu.E2.80.93Arabic_numeral_system
-// - "52.0,50.0,34.01180" ==> 52deg50'34.0118"
-// - "52,50,34.01180"     ==> 52deg50'34.0118"
+//   - "52,00000,50,00000,34,01180" ==> 52 deg 50'34.0118"
+//     Probably due to locale the comma is used as decimal mark as well as the
+//     separator of three floats (degrees, minutes, seconds)
+//     http://en.wikipedia.org/wiki/Decimal_mark#Hindu.E2.80.93Arabic_numeral_system
+//   - "52.0,50.0,34.01180" ==> 52deg50'34.0118"
+//   - "52,50,34.01180"     ==> 52deg50'34.0118"
 func parseTagDegreesString(s string) (float64, error) {
 	const unparsableErrorFmt = "Unknown coordinate format: %s"
 	isSplitRune := func(c rune) bool {
@@ -610,7 +609,7 @@ func newAppSec(marker byte, r io.Reader) (*appSec, error) {
 		}
 
 		dataLenBytes := make([]byte, 2)
-		for k, _ := range dataLenBytes {
+		for k := range dataLenBytes {
 			c, err := br.ReadByte()
 			if err != nil {
 				return nil, err
@@ -632,11 +631,6 @@ func newAppSec(marker byte, r io.Reader) (*appSec, error) {
 		app.data = append(app.data, s[:n]...)
 	}
 	return app, nil
-}
-
-// reader returns a reader on this appSec.
-func (app *appSec) reader() *bytes.Reader {
-	return bytes.NewReader(app.data)
 }
 
 // exifReader returns a reader on this appSec with the read cursor advanced to
