@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math"
 	"math/big"
 	"strings"
 	"unicode"
@@ -101,11 +102,10 @@ type Tag struct {
 	// field.
 	ValOffset uint32
 
-	order     binary.ByteOrder
-	intVals   []int64
-	floatVals []float64
-	strVal    string
-	format    Format
+	order   binary.ByteOrder
+	intVals []int64
+	strVal  string
+	format  Format
 }
 
 // DecodeTag parses a tiff-encoded IFD tag from r and returns a Tag object. The
@@ -239,26 +239,6 @@ func (t *Tag) convertVals() error {
 			}
 			t.intVals[i] = int64(v)
 		}
-	case DTFloat: // float32
-		t.floatVals = make([]float64, int(t.Count))
-		for i := range t.floatVals {
-			var v float32
-			err := binary.Read(r, t.order, &v)
-			if err != nil {
-				return err
-			}
-			t.floatVals[i] = float64(v)
-		}
-	case DTDouble:
-		t.floatVals = make([]float64, int(t.Count))
-		for i := range t.floatVals {
-			var u float64
-			err := binary.Read(r, t.order, &u)
-			if err != nil {
-				return err
-			}
-			t.floatVals[i] = u
-		}
 	}
 
 	switch t.Type {
@@ -340,10 +320,16 @@ func (t *Tag) Int(i int) (int, error) {
 // Float returns the tag's i'th value as a float. It returns an error if the
 // tag's Format is not IntVal.  It panics if i is out of range.
 func (t *Tag) Float(i int) (float64, error) {
-	if t.format != FloatVal {
+	switch t.Type {
+	case DTFloat: // float32
+		off := i * 4
+		return float64(math.Float32frombits(t.order.Uint32(t.Val[off : off+4]))), nil
+	case DTDouble:
+		off := i * 8
+		return math.Float64frombits(t.order.Uint64(t.Val[off : off+8])), nil
+	default:
 		return 0, t.typeErr(FloatVal)
 	}
-	return t.floatVals[i], nil
 }
 
 // StringVal returns the tag's value as a string. It returns an error if the
