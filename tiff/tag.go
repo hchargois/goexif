@@ -102,10 +102,9 @@ type Tag struct {
 	// field.
 	ValOffset uint32
 
-	order   binary.ByteOrder
-	intVals []int64
-	strVal  string
-	format  Format
+	order  binary.ByteOrder
+	strVal string
+	format Format
 }
 
 // DecodeTag parses a tiff-encoded IFD tag from r and returns a Tag object. The
@@ -165,8 +164,6 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 }
 
 func (t *Tag) convertVals() error {
-	r := bytes.NewReader(t.Val)
-
 	switch t.Type {
 	case DTAscii:
 		if len(t.Val) <= 0 {
@@ -178,66 +175,6 @@ func (t *Tag) convertVals() error {
 		} else {
 			// ignore all trailing NULL bytes, in case of a broken t.Count
 			t.strVal = string(t.Val[:nullPos])
-		}
-	case DTByte:
-		var v uint8
-		t.intVals = make([]int64, int(t.Count))
-		for i := range t.intVals {
-			err := binary.Read(r, t.order, &v)
-			if err != nil {
-				return err
-			}
-			t.intVals[i] = int64(v)
-		}
-	case DTShort:
-		var v uint16
-		t.intVals = make([]int64, int(t.Count))
-		for i := range t.intVals {
-			err := binary.Read(r, t.order, &v)
-			if err != nil {
-				return err
-			}
-			t.intVals[i] = int64(v)
-		}
-	case DTLong:
-		var v uint32
-		t.intVals = make([]int64, int(t.Count))
-		for i := range t.intVals {
-			err := binary.Read(r, t.order, &v)
-			if err != nil {
-				return err
-			}
-			t.intVals[i] = int64(v)
-		}
-	case DTSByte:
-		var v int8
-		t.intVals = make([]int64, int(t.Count))
-		for i := range t.intVals {
-			err := binary.Read(r, t.order, &v)
-			if err != nil {
-				return err
-			}
-			t.intVals[i] = int64(v)
-		}
-	case DTSShort:
-		var v int16
-		t.intVals = make([]int64, int(t.Count))
-		for i := range t.intVals {
-			err := binary.Read(r, t.order, &v)
-			if err != nil {
-				return err
-			}
-			t.intVals[i] = int64(v)
-		}
-	case DTSLong:
-		var v int32
-		t.intVals = make([]int64, int(t.Count))
-		for i := range t.intVals {
-			err := binary.Read(r, t.order, &v)
-			if err != nil {
-				return err
-			}
-			t.intVals[i] = int64(v)
 		}
 	}
 
@@ -302,19 +239,29 @@ func (t *Tag) Rat2(i int) (num, den int64, err error) {
 // Int64 returns the tag's i'th value as an integer. It returns an error if the
 // tag's Format is not IntVal. It panics if i is out of range.
 func (t *Tag) Int64(i int) (int64, error) {
-	if t.format != IntVal {
+	switch t.Type {
+	case DTByte:
+		return int64(t.Val[i]), nil
+	case DTShort:
+		return int64(t.order.Uint16(t.Val[i*2 : i*2+2])), nil
+	case DTLong:
+		return int64(t.order.Uint32(t.Val[i*4 : i*4+4])), nil
+	case DTSByte:
+		return int64(int8(t.Val[i])), nil
+	case DTSShort:
+		return int64(int16(t.order.Uint16(t.Val[i*2 : i*2+2]))), nil
+	case DTSLong:
+		return int64(int32(t.order.Uint32(t.Val[i*4 : i*4+4]))), nil
+	default:
 		return 0, t.typeErr(IntVal)
 	}
-	return t.intVals[i], nil
 }
 
 // Int returns the tag's i'th value as an integer. It returns an error if the
 // tag's Format is not IntVal. It panics if i is out of range.
 func (t *Tag) Int(i int) (int, error) {
-	if t.format != IntVal {
-		return 0, t.typeErr(IntVal)
-	}
-	return int(t.intVals[i]), nil
+	i64, err := t.Int64(i)
+	return int(i64), err
 }
 
 // Float returns the tag's i'th value as a float. It returns an error if the
