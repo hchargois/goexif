@@ -117,20 +117,15 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 	t := new(Tag)
 	t.order = order
 
-	err := binary.Read(r, order, &t.Id)
-	if err != nil {
-		return nil, errors.New("tiff: tag id read failed: " + err.Error())
+	var raw [12]byte
+	if _, err := io.ReadFull(r, raw[:]); err != nil {
+		return nil, errors.New("tiff: could not read tag header: " + err.Error())
 	}
+	t.Id = order.Uint16(raw[0:2])
+	t.Type = DataType(order.Uint16(raw[2:4]))
+	t.Count = order.Uint32(raw[4:8])
 
-	err = binary.Read(r, order, &t.Type)
-	if err != nil {
-		return nil, errors.New("tiff: tag type read failed: " + err.Error())
-	}
-
-	err = binary.Read(r, order, &t.Count)
-	if err != nil {
-		return nil, errors.New("tiff: tag component count read failed: " + err.Error())
-	}
+	var err error
 
 	// There seems to be a relatively common corrupt tag which has a Count of
 	// MaxUint32. This is probably not a valid value, so return early.
@@ -144,7 +139,7 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 	}
 
 	if valLen > 4 {
-		binary.Read(r, order, &t.ValOffset)
+		t.ValOffset = order.Uint32(raw[8:12])
 
 		sr := io.NewSectionReader(r, int64(t.ValOffset), int64(valLen))
 		var n int
@@ -164,12 +159,7 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 			return t, ErrShortReadTagValue
 		}
 	} else {
-		val := make([]byte, 4)
-		if _, err = io.ReadFull(r, val); err != nil {
-			return t, errors.New("tiff: tag offset read failed: " + err.Error())
-		}
-
-		t.Val = val[:valLen]
+		t.Val = raw[8 : 8+valLen]
 	}
 
 	return t, t.convertVals()
