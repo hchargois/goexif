@@ -137,18 +137,17 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 	if valLen > 4 {
 		t.ValOffset = order.Uint32(raw[8:12])
 
-		sr := io.NewSectionReader(r, int64(t.ValOffset), int64(valLen))
-		var n int
 		if valLen <= 32*1024 {
 			// if the length is < 32kiB, we'll trust it and allocate the slice;
 			t.Val = make([]byte, valLen)
-			n, err = io.ReadFull(sr, t.Val)
+			err = ReadFullAt(r, t.Val, int64(t.ValOffset))
 		} else {
 			// otherwise we use a bytes.Buffer so we don't allocate a huge slice if the tag
 			// is corrupt.
+			sr := io.NewSectionReader(r, int64(t.ValOffset), int64(valLen))
 			t.Val, err = io.ReadAll(sr)
-			n = len(t.Val)
 		}
+		n := len(t.Val)
 		if err != nil {
 			return t, errors.New("tiff: tag value read failed: " + err.Error())
 		} else if n != int(valLen) {
@@ -159,6 +158,30 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 	}
 
 	return t, nil
+}
+
+// ReadFullAt reads exactly len(p) bytes from r starting at offset off into p.
+// It returns nil on success.
+// If it cannot read len(p) bytes, it returns io.ErrUnexpectedEOF (or another error).
+func ReadFullAt(r io.ReaderAt, p []byte, off int64) error {
+	for n := 0; n < len(p); {
+		m, err := r.ReadAt(p[n:], off+int64(n))
+		n += m
+
+		if err == nil {
+			continue
+		}
+		// io.ReaderAt is allowed to return a non-nil err with m > 0.
+		// If we filled the buffer, consider it success.
+		if n == len(p) {
+			return nil
+		}
+		if err == io.EOF {
+			return io.ErrUnexpectedEOF
+		}
+		return err
+	}
+	return nil
 }
 
 // Format returns a value indicating which method can be called to retrieve the
