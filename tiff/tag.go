@@ -104,7 +104,6 @@ type Tag struct {
 	order     binary.ByteOrder
 	intVals   []int64
 	floatVals []float64
-	ratVals   [][]int64
 	strVal    string
 	format    Format
 }
@@ -240,34 +239,6 @@ func (t *Tag) convertVals() error {
 			}
 			t.intVals[i] = int64(v)
 		}
-	case DTRational:
-		t.ratVals = make([][]int64, int(t.Count))
-		for i := range t.ratVals {
-			var n, d uint32
-			err := binary.Read(r, t.order, &n)
-			if err != nil {
-				return err
-			}
-			err = binary.Read(r, t.order, &d)
-			if err != nil {
-				return err
-			}
-			t.ratVals[i] = []int64{int64(n), int64(d)}
-		}
-	case DTSRational:
-		t.ratVals = make([][]int64, int(t.Count))
-		for i := range t.ratVals {
-			var n, d int32
-			err := binary.Read(r, t.order, &n)
-			if err != nil {
-				return err
-			}
-			err = binary.Read(r, t.order, &d)
-			if err != nil {
-				return err
-			}
-			t.ratVals[i] = []int64{int64(n), int64(d)}
-		}
 	case DTFloat: // float32
 		t.floatVals = make([]float64, int(t.Count))
 		for i := range t.floatVals {
@@ -331,10 +302,21 @@ func (t *Tag) Rat(i int) (*big.Rat, error) {
 // numerator-denominator pair. It returns an error if the tag's Format is not
 // RatVal. It panics if i is out of range.
 func (t *Tag) Rat2(i int) (num, den int64, err error) {
-	if t.format != RatVal {
+	off := i * 8
+	switch t.Type {
+	case DTRational:
+		var n, d uint32
+		n = t.order.Uint32(t.Val[off : off+4])
+		d = t.order.Uint32(t.Val[off+4 : off+8])
+		return int64(n), int64(d), nil
+	case DTSRational:
+		var n, d int32
+		n = int32(t.order.Uint32(t.Val[off : off+4]))
+		d = int32(t.order.Uint32(t.Val[off+4 : off+8]))
+		return int64(n), int64(d), nil
+	default:
 		return 0, 0, t.typeErr(RatVal)
 	}
-	return t.ratVals[i][0], t.ratVals[i][1], nil
 }
 
 // Int64 returns the tag's i'th value as an integer. It returns an error if the
