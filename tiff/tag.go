@@ -164,16 +164,12 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 			return t, ErrShortReadTagValue
 		}
 	} else {
-		val := make([]byte, valLen)
+		val := make([]byte, 4)
 		if _, err = io.ReadFull(r, val); err != nil {
 			return t, errors.New("tiff: tag offset read failed: " + err.Error())
 		}
-		// ignore padding.
-		if _, err = io.ReadFull(r, make([]byte, 4-valLen)); err != nil {
-			return t, errors.New("tiff: tag offset read failed: " + err.Error())
-		}
 
-		t.Val = val
+		t.Val = val[:valLen]
 	}
 
 	return t, t.convertVals()
