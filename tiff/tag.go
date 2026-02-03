@@ -102,8 +102,7 @@ type Tag struct {
 	// field.
 	ValOffset uint32
 
-	order  binary.ByteOrder
-	format Format
+	order binary.ByteOrder
 }
 
 // DecodeTag parses a tiff-encoded IFD tag from r and returns a Tag object. The
@@ -159,31 +158,27 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 		t.Val = raw[8 : 8+valLen]
 	}
 
-	return t, t.convertVals()
-}
-
-func (t *Tag) convertVals() error {
-	switch t.Type {
-	case DTByte, DTShort, DTLong, DTSByte, DTSShort, DTSLong:
-		t.format = IntVal
-	case DTRational, DTSRational:
-		t.format = RatVal
-	case DTFloat, DTDouble:
-		t.format = FloatVal
-	case DTAscii:
-		t.format = StringVal
-	case DTUndefined:
-		t.format = UndefVal
-	default:
-		t.format = OtherVal
-	}
-
-	return nil
+	return t, nil
 }
 
 // Format returns a value indicating which method can be called to retrieve the
 // tag's value properly typed (e.g. integer, rational, etc.).
-func (t *Tag) Format() Format { return t.format }
+func (t *Tag) Format() Format {
+	switch t.Type {
+	case DTByte, DTShort, DTLong, DTSByte, DTSShort, DTSLong:
+		return IntVal
+	case DTRational, DTSRational:
+		return RatVal
+	case DTFloat, DTDouble:
+		return FloatVal
+	case DTAscii:
+		return StringVal
+	case DTUndefined:
+		return UndefVal
+	default:
+		return OtherVal
+	}
+}
 
 func (t *Tag) typeErr(to Format) error {
 	return &wrongFmtErr{typeNames[t.Type], formatNames[to]}
@@ -298,7 +293,8 @@ func (t *Tag) String() string {
 }
 
 func (t *Tag) MarshalJSON() ([]byte, error) {
-	switch t.format {
+	format := t.Format()
+	switch format {
 	case StringVal, UndefVal:
 		return nullString(t.Val), nil
 	case OtherVal:
@@ -307,7 +303,7 @@ func (t *Tag) MarshalJSON() ([]byte, error) {
 
 	rv := []string{}
 	for i := 0; i < int(t.Count); i++ {
-		switch t.format {
+		switch format {
 		case RatVal:
 			n, d, _ := t.Rat2(i)
 			rv = append(rv, fmt.Sprintf(`"%v/%v"`, n, d))
