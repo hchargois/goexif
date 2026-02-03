@@ -103,7 +103,6 @@ type Tag struct {
 	ValOffset uint32
 
 	order  binary.ByteOrder
-	strVal string
 	format Format
 }
 
@@ -164,20 +163,6 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 }
 
 func (t *Tag) convertVals() error {
-	switch t.Type {
-	case DTAscii:
-		if len(t.Val) <= 0 {
-			break
-		}
-		nullPos := bytes.IndexByte(t.Val, 0)
-		if nullPos == -1 {
-			t.strVal = string(t.Val)
-		} else {
-			// ignore all trailing NULL bytes, in case of a broken t.Count
-			t.strVal = string(t.Val[:nullPos])
-		}
-	}
-
 	switch t.Type {
 	case DTByte, DTShort, DTLong, DTSByte, DTSShort, DTSLong:
 		t.format = IntVal
@@ -282,10 +267,21 @@ func (t *Tag) Float(i int) (float64, error) {
 // StringVal returns the tag's value as a string. It returns an error if the
 // tag's Format is not StringVal. It panics if i is out of range.
 func (t *Tag) StringVal() (string, error) {
-	if t.format != StringVal {
+	switch t.Type {
+	case DTAscii:
+		if len(t.Val) <= 0 {
+			return "", nil
+		}
+		nullPos := bytes.IndexByte(t.Val, 0)
+		if nullPos == -1 {
+			return string(t.Val), nil
+		} else {
+			// ignore all trailing NULL bytes, in case of a broken t.Count
+			return string(t.Val[:nullPos]), nil
+		}
+	default:
 		return "", t.typeErr(StringVal)
 	}
-	return t.strVal, nil
 }
 
 // String returns a nicely formatted version of the tag.

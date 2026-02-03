@@ -170,8 +170,12 @@ func testSingle(t *testing.T, order binary.ByteOrder, in input, out output, i in
 	}
 	if tg.Type == DTAscii && in.val != "" {
 		strOut := string(out.val)
-		if tg.strVal != strOut {
-			t.Errorf("(%v) tag %v string value decode: expected %q, got %q", order, i, strOut, tg.strVal)
+		strVal, err := tg.StringVal()
+		if err != nil {
+			t.Errorf("(%v) tag %v string value decode failed: %v", order, i, err)
+		}
+		if strVal != strOut {
+			t.Errorf("(%v) tag %v string value decode: expected %q, got %q", order, i, strOut, strVal)
 		}
 	} else {
 		if !bytes.Equal(tg.Val, out.val) {
