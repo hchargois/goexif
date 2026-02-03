@@ -173,8 +173,6 @@ func (p *parser) Parse(x *Exif) error {
 }
 
 func loadSubDir(x *Exif, ptr FieldName, fieldMap map[uint16]FieldName) error {
-	r := bytes.NewReader(x.Raw)
-
 	tag, err := x.Get(ptr)
 	if err != nil {
 		return nil
@@ -184,11 +182,10 @@ func loadSubDir(x *Exif, ptr FieldName, fieldMap map[uint16]FieldName) error {
 		return nil
 	}
 
-	_, err = r.Seek(offset, 0)
-	if err != nil {
-		return fmt.Errorf("exif: seek to sub-IFD %s failed: %v", ptr, err)
+	if int(offset) >= len(x.Raw) {
+		return fmt.Errorf("exif: seek to sub-IFD %s failed: offset beyond data", ptr)
 	}
-	subDir, _, err := tiff.DecodeDir(r, x.Tiff.Order)
+	subDir, _, err := tiff.DecodeDirBytes(x.Raw, int(offset), x.Tiff.Order)
 	if err != nil {
 		return fmt.Errorf("exif: sub-IFD %s decode failed: %v", ptr, err)
 	}

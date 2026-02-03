@@ -75,18 +75,12 @@ func DecodeBytes(data []byte) (*Tiff, error) {
 	var d *Dir
 	prev := offset
 	for offset != 0 {
-		// seek to offset
-		_, err := buf.Seek(int64(offset), 0)
-		if err != nil {
-			return nil, errors.New("tiff: seek to IFD failed")
-		}
-
-		if buf.Len() == 0 {
+		if int(offset) >= len(data) {
 			return nil, errors.New("tiff: seek offset after EOF")
 		}
 
 		// load the dir
-		d, offset, err = DecodeDir(buf, t.Order)
+		d, offset, err = DecodeDirBytes(data, int(offset), t.Order)
 		if err != nil {
 			return nil, err
 		}
@@ -155,4 +149,36 @@ func (d *Dir) String() string {
 		s += t.String() + ", "
 	}
 	return s + "}"
+}
+
+// DecodeDirBytes parses a tiff-encoded IFD from data starting at offset and returns a Dir object.
+// nextOffset is the offset to the next IFD. Value offsets within tags are relative to the
+// beginning of data (not relative to offset).
+func DecodeDirBytes(data []byte, offset int, order binary.ByteOrder) (d *Dir, nextOffset int32, err error) {
+	if offset+2 > len(data) {
+		return nil, 0, errors.New("tiff: failed to read IFD tag count: insufficient data")
+	}
+
+	nTags := int16(order.Uint16(data[offset : offset+2]))
+	offset += 2
+	d = &Dir{
+		Tags: make([]*Tag, 0, nTags),
+	}
+
+	for n := 0; n < int(nTags); n++ {
+		t, err := DecodeTagBytes(data, offset, order)
+		if err != nil {
+			return nil, 0, err
+		}
+		d.Tags = append(d.Tags, t)
+		offset += 12
+	}
+
+	if offset+4 > len(data) {
+		return nil, 0, errors.New("tiff: failed to read offset to next IFD: insufficient data")
+	}
+
+	nextOffset = int32(order.Uint32(data[offset : offset+4]))
+
+	return d, nextOffset, nil
 }

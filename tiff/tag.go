@@ -160,6 +160,47 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 	return t, nil
 }
 
+// DecodeTagBytes parses a tiff-encoded IFD tag from data starting at offset and returns a Tag object.
+// The offset should point to the first byte of the tag. Value offsets are relative to the beginning
+// of data (not relative to offset).
+func DecodeTagBytes(data []byte, offset int, order binary.ByteOrder) (*Tag, error) {
+	t := new(Tag)
+	t.order = order
+
+	if offset+12 > len(data) {
+		return nil, errors.New("tiff: could not read tag header: insufficient data")
+	}
+
+	raw := data[offset : offset+12]
+	t.Id = order.Uint16(raw[0:2])
+	t.Type = DataType(order.Uint16(raw[2:4]))
+	t.Count = order.Uint32(raw[4:8])
+
+	if t.Count == 1<<32-1 {
+		return t, errors.New("invalid Count offset in tag")
+	}
+
+	valLen := typeSize[t.Type] * t.Count
+	if valLen == 0 {
+		return t, errors.New("zero length tag value")
+	}
+
+	if valLen > 4 {
+		t.ValOffset = order.Uint32(raw[8:12])
+		valEnd := int(t.ValOffset) + int(valLen)
+		if valEnd > len(data) || int(t.ValOffset) > len(data) {
+			return t, ErrShortReadTagValue
+		}
+		t.Val = make([]byte, valLen)
+		copy(t.Val, data[t.ValOffset:valEnd])
+	} else {
+		t.Val = make([]byte, valLen)
+		copy(t.Val, raw[8:8+valLen])
+	}
+
+	return t, nil
+}
+
 // ReadFullAt reads exactly len(p) bytes from r starting at offset off into p.
 // It returns nil on success.
 // If it cannot read len(p) bytes, it returns io.ErrUnexpectedEOF (or another error).
