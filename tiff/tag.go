@@ -102,7 +102,14 @@ type Tag struct {
 	// field.
 	ValOffset uint32
 
-	order binary.ByteOrder
+	bigEndian bool
+}
+
+func (t *Tag) order() binary.ByteOrder {
+	if t.bigEndian {
+		return binary.BigEndian
+	}
+	return binary.LittleEndian
 }
 
 // DecodeTag parses a tiff-encoded IFD tag from r and returns a Tag object. The
@@ -111,7 +118,7 @@ type Tag struct {
 // to the beginning of the tag).
 func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 	t := new(Tag)
-	t.order = order
+	t.bigEndian = order == binary.BigEndian
 
 	var raw [12]byte
 	if _, err := io.ReadFull(r, raw[:]); err != nil {
@@ -165,7 +172,7 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 // of data (not relative to offset).
 func DecodeTagBytes(data []byte, offset int, order binary.ByteOrder) (*Tag, error) {
 	t := new(Tag)
-	t.order = order
+	t.bigEndian = order == binary.BigEndian
 
 	if offset+12 > len(data) {
 		return nil, errors.New("tiff: could not read tag header: insufficient data")
@@ -267,13 +274,13 @@ func (t *Tag) Rat2(i int) (num, den int64, err error) {
 	switch t.Type {
 	case DTRational:
 		var n, d uint32
-		n = t.order.Uint32(t.Val[off : off+4])
-		d = t.order.Uint32(t.Val[off+4 : off+8])
+		n = t.order().Uint32(t.Val[off : off+4])
+		d = t.order().Uint32(t.Val[off+4 : off+8])
 		return int64(n), int64(d), nil
 	case DTSRational:
 		var n, d int32
-		n = int32(t.order.Uint32(t.Val[off : off+4]))
-		d = int32(t.order.Uint32(t.Val[off+4 : off+8]))
+		n = int32(t.order().Uint32(t.Val[off : off+4]))
+		d = int32(t.order().Uint32(t.Val[off+4 : off+8]))
 		return int64(n), int64(d), nil
 	default:
 		return 0, 0, t.typeErr(RatVal)
@@ -287,15 +294,15 @@ func (t *Tag) Int64(i int) (int64, error) {
 	case DTByte:
 		return int64(t.Val[i]), nil
 	case DTShort:
-		return int64(t.order.Uint16(t.Val[i*2 : i*2+2])), nil
+		return int64(t.order().Uint16(t.Val[i*2 : i*2+2])), nil
 	case DTLong:
-		return int64(t.order.Uint32(t.Val[i*4 : i*4+4])), nil
+		return int64(t.order().Uint32(t.Val[i*4 : i*4+4])), nil
 	case DTSByte:
 		return int64(int8(t.Val[i])), nil
 	case DTSShort:
-		return int64(int16(t.order.Uint16(t.Val[i*2 : i*2+2]))), nil
+		return int64(int16(t.order().Uint16(t.Val[i*2 : i*2+2]))), nil
 	case DTSLong:
-		return int64(int32(t.order.Uint32(t.Val[i*4 : i*4+4]))), nil
+		return int64(int32(t.order().Uint32(t.Val[i*4 : i*4+4]))), nil
 	default:
 		return 0, t.typeErr(IntVal)
 	}
@@ -314,10 +321,10 @@ func (t *Tag) Float(i int) (float64, error) {
 	switch t.Type {
 	case DTFloat: // float32
 		off := i * 4
-		return float64(math.Float32frombits(t.order.Uint32(t.Val[off : off+4]))), nil
+		return float64(math.Float32frombits(t.order().Uint32(t.Val[off : off+4]))), nil
 	case DTDouble:
 		off := i * 8
-		return math.Float64frombits(t.order.Uint64(t.Val[off : off+8])), nil
+		return math.Float64frombits(t.order().Uint64(t.Val[off : off+8])), nil
 	default:
 		return 0, t.typeErr(FloatVal)
 	}
