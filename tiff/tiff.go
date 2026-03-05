@@ -40,40 +40,35 @@ func Decode(r io.Reader) (*Tiff, error) {
 // DecodeBytes does the same as Decode but should be used when you have the
 // entire tiff data in a byte slice.
 func DecodeBytes(data []byte) (*Tiff, error) {
-	buf := bytes.NewReader(data)
-
 	t := new(Tiff)
 
-	// read byte order
-	bo := make([]byte, 2)
-	if _, err := io.ReadFull(buf, bo); err != nil {
-		return nil, errors.New("tiff: could not read tiff byte order")
+	if len(data) < 2+2+4 {
+		return nil, errors.New("tiff: insufficient data for tiff header")
 	}
-	if string(bo) == "II" {
+
+	// read byte order
+	bo := data[:2]
+	switch string(bo) {
+	case "II":
 		t.Order = binary.LittleEndian
-	} else if string(bo) == "MM" {
+	case "MM":
 		t.Order = binary.BigEndian
-	} else {
-		return nil, errors.New("tiff: could not read tiff byte order")
+	default:
+		return nil, errors.New("tiff: invalid byte order marker")
 	}
 
 	// check for special tiff marker
-	var sp int16
-	err := binary.Read(buf, t.Order, &sp)
-	if err != nil || 42 != sp {
+	sp := t.Order.Uint16(data[2:])
+	if sp != 42 {
 		return nil, errors.New("tiff: could not find special tiff marker")
 	}
 
-	// load offset to first IFD
-	var offset int32
-	err = binary.Read(buf, t.Order, &offset)
-	if err != nil {
-		return nil, errors.New("tiff: could not read offset to first IFD")
-	}
+	offset := int32(t.Order.Uint32(data[4:]))
 
 	// load IFD's
 	var d *Dir
 	prev := offset
+	var err error
 	for offset != 0 {
 		if int(offset) >= len(data) {
 			return nil, errors.New("tiff: seek offset after EOF")
