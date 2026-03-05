@@ -287,7 +287,8 @@ func Decode(r io.Reader) (*Exif, error) {
 
 	// build an exif structure from the tiff
 	x := &Exif{
-		main: map[FieldName]*tiff.Tag{},
+		// sizing the map to a reasonable number of tags reduces allocs
+		main: make(map[FieldName]*tiff.Tag, 32),
 		Tiff: tif,
 		Raw:  raw,
 	}
