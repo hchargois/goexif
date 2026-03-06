@@ -150,31 +150,38 @@ func (d *Dir) String() string {
 // nextOffset is the offset to the next IFD. Value offsets within tags are relative to the
 // beginning of data (not relative to offset).
 func DecodeDirBytes(data []byte, offset int, order binary.ByteOrder) (d *Dir, nextOffset int32, err error) {
+	// keeping allocation in a short stub with the meat of the function
+	// in decodeDirBytesInto allows mid-stack inlining of that stub and
+	// avoids escape of Dir in e.g. loadSubDir
+	d = new(Dir)
+	nextOffset, err = decodeDirBytesInto(d, data, offset, order)
+	return d, nextOffset, err
+}
+
+func decodeDirBytesInto(d *Dir, data []byte, offset int, order binary.ByteOrder) (nextOffset int32, err error) {
 	if offset+2 > len(data) {
-		return nil, 0, errors.New("tiff: failed to read IFD tag count: insufficient data")
+		return 0, errors.New("tiff: failed to read IFD tag count: insufficient data")
 	}
 
 	nTags := int16(order.Uint16(data[offset : offset+2]))
 	offset += 2
-	d = &Dir{
-		Tags: make([]*Tag, 0, nTags),
-	}
+	d.Tags = make([]*Tag, 0, nTags)
 	tags := make([]Tag, nTags)
 
 	for n := 0; n < int(nTags); n++ {
 		err := decodeTagBytesInto(&tags[n], data, offset, order)
 		if err != nil {
-			return nil, 0, err
+			return 0, err
 		}
 		d.Tags = append(d.Tags, &tags[n])
 		offset += 12
 	}
 
 	if offset+4 > len(data) {
-		return nil, 0, errors.New("tiff: failed to read offset to next IFD: insufficient data")
+		return 0, errors.New("tiff: failed to read offset to next IFD: insufficient data")
 	}
 
 	nextOffset = int32(order.Uint32(data[offset : offset+4]))
 
-	return d, nextOffset, nil
+	return nextOffset, nil
 }
