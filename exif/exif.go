@@ -13,6 +13,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/hchargois/goexif/tiff"
@@ -243,7 +244,6 @@ func Decode(r io.Reader) (*Exif, error) {
 	r = io.MultiReader(bytes.NewReader(header), r)
 	var (
 		tif *tiff.Tiff
-		sec *appSec
 		raw []byte
 	)
 
@@ -270,7 +270,7 @@ func Decode(r io.Reader) (*Exif, error) {
 		raw = b.Bytes()
 	case assumeJPEG:
 		// Locate the JPEG APP1 header.
-		sec, err = newAppSec(jpeg_APP1, r)
+		sec, err := newAppSec(jpeg_APP1, r)
 		if err != nil {
 			return nil, err
 		}
@@ -583,21 +583,40 @@ type appSec struct {
 	data   []byte
 }
 
+var bufReaderPool = sync.Pool{
+	New: func() any {
+		return bufio.NewReader(nil)
+	},
+}
+
+func getBufReader(r io.Reader) *bufio.Reader {
+	br := bufReaderPool.Get().(*bufio.Reader)
+	br.Reset(r)
+	return br
+}
+
+func putBufReader(br *bufio.Reader) {
+	br.Reset(nil)
+	bufReaderPool.Put(br)
+}
+
 // newAppSec finds marker in r and returns the corresponding application data
 // section.
-func newAppSec(marker byte, r io.Reader) (*appSec, error) {
-	br := bufio.NewReader(r)
-	app := &appSec{marker: marker}
+func newAppSec(marker byte, r io.Reader) (appSec, error) {
+	br := getBufReader(r)
+	defer putBufReader(br)
+
+	app := appSec{marker: marker}
 	var dataLen int
 
 	// seek to marker
 	for dataLen == 0 {
 		if _, err := br.ReadBytes(0xFF); err != nil {
-			return nil, err
+			return appSec{}, err
 		}
 		c, err := br.ReadByte()
 		if err != nil {
-			return nil, err
+			return appSec{}, err
 		} else if c != marker {
 			continue
 		}
@@ -606,7 +625,7 @@ func newAppSec(marker byte, r io.Reader) (*appSec, error) {
 		for k := range dataLenBytes {
 			c, err := br.ReadByte()
 			if err != nil {
-				return nil, err
+				return appSec{}, err
 			}
 			dataLenBytes[k] = c
 		}
@@ -617,7 +636,7 @@ func newAppSec(marker byte, r io.Reader) (*appSec, error) {
 	app.data = make([]byte, dataLen)
 	_, err := io.ReadFull(br, app.data)
 	if err != nil {
-		return nil, err
+		return appSec{}, err
 	}
 	return app, nil
 }
