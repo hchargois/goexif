@@ -172,10 +172,18 @@ func DecodeTag(r ReadAtReader, order binary.ByteOrder) (*Tag, error) {
 // of data (not relative to offset).
 func DecodeTagBytes(data []byte, offset int, order binary.ByteOrder) (*Tag, error) {
 	t := new(Tag)
+	err := decodeTagBytesInto(t, data, offset, order)
+	if err != nil {
+		return t, err
+	}
+	return t, nil
+}
+
+func decodeTagBytesInto(t *Tag, data []byte, offset int, order binary.ByteOrder) error {
 	t.bigEndian = order == binary.BigEndian
 
 	if offset+12 > len(data) {
-		return nil, errors.New("tiff: could not read tag header: insufficient data")
+		return errors.New("tiff: could not read tag header: insufficient data")
 	}
 
 	raw := data[offset : offset+12]
@@ -184,19 +192,19 @@ func DecodeTagBytes(data []byte, offset int, order binary.ByteOrder) (*Tag, erro
 	t.Count = order.Uint32(raw[4:8])
 
 	if t.Count == 1<<32-1 {
-		return t, errors.New("invalid Count offset in tag")
+		return errors.New("invalid Count offset in tag")
 	}
 
 	valLen := typeSize[t.Type] * t.Count
 	if valLen == 0 {
-		return t, errors.New("zero length tag value")
+		return errors.New("zero length tag value")
 	}
 
 	if valLen > 4 {
 		t.ValOffset = order.Uint32(raw[8:12])
 		valEnd := int(t.ValOffset) + int(valLen)
 		if valEnd > len(data) || int(t.ValOffset) > len(data) {
-			return t, ErrShortReadTagValue
+			return ErrShortReadTagValue
 		}
 		t.Val = make([]byte, valLen)
 		copy(t.Val, data[t.ValOffset:valEnd])
@@ -205,7 +213,7 @@ func DecodeTagBytes(data []byte, offset int, order binary.ByteOrder) (*Tag, erro
 		copy(t.Val, raw[8:8+valLen])
 	}
 
-	return t, nil
+	return nil
 }
 
 // ReadFullAt reads exactly len(p) bytes from r starting at offset off into p.

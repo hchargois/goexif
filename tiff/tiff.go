@@ -159,13 +159,14 @@ func DecodeDirBytes(data []byte, offset int, order binary.ByteOrder) (d *Dir, ne
 	d = &Dir{
 		Tags: make([]*Tag, 0, nTags),
 	}
+	tags := make([]Tag, nTags)
 
 	for n := 0; n < int(nTags); n++ {
-		t, err := DecodeTagBytes(data, offset, order)
+		err := decodeTagBytesInto(&tags[n], data, offset, order)
 		if err != nil {
 			return nil, 0, err
 		}
-		d.Tags = append(d.Tags, t)
+		d.Tags = append(d.Tags, &tags[n])
 		offset += 12
 	}
 
