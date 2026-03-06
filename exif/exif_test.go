@@ -88,16 +88,58 @@ func BenchmarkDecode(b *testing.B) {
 		}
 	}()
 
-	for b.Loop() {
-		for _, f := range files {
-			if _, err := f.Seek(0, 0); err != nil {
-				b.Fatal(err)
+	for _, c := range []struct {
+		name string
+		w    Walker
+	}{
+		{"ReadNoTags", WalkerFunc(noopWalker)},
+		{"ReadAllToStrings", WalkerFunc(stringWalker)},
+		{"ReadAllToTypes", WalkerFunc(nativeTypesWalker)},
+	} {
+		b.Run(c.name, func(b *testing.B) {
+			for b.Loop() {
+				for _, f := range files {
+					if _, err := f.Seek(0, 0); err != nil {
+						b.Fatal(err)
+					}
+					ex, err := Decode(f)
+					if err != nil {
+						b.Fatal(err)
+					}
+					ex.Walk(c.w)
+				}
 			}
-			if _, err := Decode(f); err != nil {
-				b.Fatal(err)
-			}
-		}
+		})
 	}
+}
+
+func noopWalker(name FieldName, tag *tiff.Tag) error {
+	return nil
+}
+
+func stringWalker(name FieldName, tag *tiff.Tag) error {
+	_ = tag.String()
+	return nil
+}
+
+func nativeTypesWalker(name FieldName, tag *tiff.Tag) error {
+	switch tag.Format() {
+	case tiff.IntVal:
+		for i := range int(tag.Count) {
+			_, _ = tag.Int64(i)
+		}
+	case tiff.FloatVal:
+		for i := range int(tag.Count) {
+			_, _ = tag.Float(i)
+		}
+	case tiff.RatVal:
+		for i := range int(tag.Count) {
+			_, _, _ = tag.Rat2(i)
+		}
+	case tiff.StringVal:
+		_, _ = tag.StringVal()
+	}
+	return nil
 }
 
 func TestDecodeRawEXIF(t *testing.T) {

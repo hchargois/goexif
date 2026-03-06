@@ -354,6 +354,13 @@ func (x *Exif) Walk(w Walker) error {
 	return nil
 }
 
+// WalkerFunc is an adapter that turns a function into a Walker.
+type WalkerFunc func(FieldName, *tiff.Tag) error
+
+func (f WalkerFunc) Walk(name FieldName, tag *tiff.Tag) error {
+	return f(name, tag)
+}
+
 // DateTime returns the EXIF's "DateTimeOriginal" field, which
 // is the creation time of the photo. If not found, it tries
 // the "DateTime" (which is meant as the modtime) instead.
