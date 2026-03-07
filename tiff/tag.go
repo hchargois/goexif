@@ -8,7 +8,8 @@ import (
 	"io"
 	"math"
 	"math/big"
-	"strings"
+	"strconv"
+	"sync"
 	"unicode"
 	"unicode/utf8"
 )
@@ -360,57 +361,101 @@ func (t *Tag) StringVal() (string, error) {
 
 // String returns a nicely formatted version of the tag.
 func (t *Tag) String() string {
-	data, err := t.MarshalJSON()
-	if err != nil {
-		return "ERROR: " + err.Error()
-	}
+	buf := getBuf()
+	defer putBuf(buf)
+
+	t.marshalJSON(buf)
+	data := buf.Bytes()
 
 	if t.Count == 1 {
-		return strings.Trim(fmt.Sprintf("%s", data), "[]")
+		switch t.Format() {
+		case StringVal, UndefVal, OtherVal:
+			return string(data)
+		}
+		return string(data[1 : len(data)-1])
 	}
-	return fmt.Sprintf("%s", data)
+	return string(data)
+}
+
+var bufPool = sync.Pool{
+	New: func() any {
+		return new(bytes.Buffer)
+	},
+}
+
+func getBuf() *bytes.Buffer {
+	return bufPool.Get().(*bytes.Buffer)
+}
+
+func putBuf(buf *bytes.Buffer) {
+	if buf.Cap() > 10*1024 {
+		// don't put huge buffers back in the pool
+		return
+	}
+	buf.Reset()
+	bufPool.Put(buf)
 }
 
 func (t *Tag) MarshalJSON() ([]byte, error) {
+	buf := getBuf()
+	defer putBuf(buf)
+
+	t.marshalJSON(buf)
+	cpy := make([]byte, buf.Len())
+	copy(cpy, buf.Bytes())
+	return cpy, nil
+}
+
+func (t *Tag) marshalJSON(buf *bytes.Buffer) {
 	format := t.Format()
 	switch format {
 	case StringVal, UndefVal:
-		return nullString(t.Val), nil
+		nullString(buf, t.Val)
+		return
 	case OtherVal:
-		return []byte(fmt.Sprintf("unknown tag type '%v'", t.Type)), nil
+		fmt.Fprintf(buf, "unknown tag type '%v'", t.Type)
+		return
 	}
 
-	rv := []string{}
-	for i := 0; i < int(t.Count); i++ {
+	buf.WriteByte('[')
+	for i := range int(t.Count) {
 		switch format {
 		case RatVal:
 			n, d, _ := t.Rat2(i)
-			rv = append(rv, fmt.Sprintf(`"%v/%v"`, n, d))
+			buf.WriteByte('"')
+			buf.WriteString(strconv.FormatInt(n, 10))
+			buf.WriteByte('/')
+			buf.WriteString(strconv.FormatInt(d, 10))
+			buf.WriteByte('"')
 		case FloatVal:
 			v, _ := t.Float(i)
-			rv = append(rv, fmt.Sprintf("%v", v))
+			buf.WriteString(strconv.FormatFloat(v, 'g', -1, 64))
 		case IntVal:
 			v, _ := t.Int(i)
-			rv = append(rv, fmt.Sprintf("%v", v))
+			buf.WriteString(strconv.Itoa(v))
+		}
+		if i != int(t.Count)-1 {
+			buf.WriteByte(',')
 		}
 	}
-	return []byte(fmt.Sprintf(`[%s]`, strings.Join(rv, ","))), nil
+	buf.WriteByte(']')
 }
 
-func nullString(in []byte) []byte {
-	rv := bytes.Buffer{}
-	rv.WriteByte('"')
+func nullString(buf *bytes.Buffer, in []byte) {
+	// must be called with an empty buffer
+	buf.Grow(len(in) + 2)
+	buf.WriteByte('"')
 	for _, b := range in {
 		if unicode.IsPrint(rune(b)) {
-			rv.WriteByte(b)
+			buf.WriteByte(b)
 		}
 	}
-	rv.WriteByte('"')
-	rvb := rv.Bytes()
-	if utf8.Valid(rvb) {
-		return rvb
+	buf.WriteByte('"')
+	rvb := buf.Bytes()
+	if !utf8.Valid(rvb) {
+		buf.Reset()
+		buf.WriteString(`""`)
 	}
-	return []byte(`""`)
 }
 
 type wrongFmtErr struct {
