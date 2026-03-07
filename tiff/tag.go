@@ -444,18 +444,21 @@ func (t *Tag) marshalJSON(buf *bytes.Buffer) {
 func nullString(buf *bytes.Buffer, in []byte) {
 	// must be called with an empty buffer
 	buf.Grow(len(in) + 2)
+
 	buf.WriteByte('"')
-	for _, b := range in {
-		if unicode.IsPrint(rune(b)) {
-			buf.WriteByte(b)
+	for len(in) > 0 {
+		r, size := utf8.DecodeRune(in)
+		if r == utf8.RuneError {
+			buf.Reset()
+			buf.WriteString(`""`)
+			return
 		}
+		if unicode.IsPrint(r) {
+			buf.WriteRune(r)
+		}
+		in = in[size:]
 	}
 	buf.WriteByte('"')
-	rvb := buf.Bytes()
-	if !utf8.Valid(rvb) {
-		buf.Reset()
-		buf.WriteString(`""`)
-	}
 }
 
 type wrongFmtErr struct {

@@ -1299,7 +1299,7 @@ var regressExpected = map[string]map[FieldName]string{
 		InteroperabilityIndex:            `"R98"`,
 		LightSource:                      `0`,
 		Make:                             `"FUJIFILM"`,
-		MakerNote:                        `"FUJIFILM0130" !"#,012NORMAL d"`,
+		MakerNote:                        `""`,
 		MaxApertureValue:                 `"300/100"`,
 		MeteringMode:                     `5`,
 		Model:                            `"FinePix E550   "`,

@@ -74,7 +74,7 @@ func makeExpected(files []string, w io.Writer) {
 		}))
 		sort.Strings(items)
 
-		fmt.Fprintf(w, "\"%v\": map[FieldName]string{\n", filepath.Base(name))
+		fmt.Fprintf(w, "\"%v\": {\n", filepath.Base(name))
 		for _, item := range items {
 			fmt.Fprint(w, item)
 		}
