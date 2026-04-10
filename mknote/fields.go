@@ -135,6 +135,96 @@ const (
 	Canon_0x00b5         exif.FieldName = "Canon.0x00b5"
 	Canon_0x00c0         exif.FieldName = "Canon.0x00c0"
 	Canon_0x00c1         exif.FieldName = "Canon.0x00c1"
+
+	// Fujifilm-specific fields
+	Fujifilm_Version                   exif.FieldName = "Fujifilm.Version"
+	Fujifilm_SerialNumber              exif.FieldName = "Fujifilm.SerialNumber"
+	Fujifilm_Sharpness                 exif.FieldName = "Fujifilm.Sharpness"
+	Fujifilm_ColorTemperature          exif.FieldName = "Fujifilm.ColorTemperature"
+	Fujifilm_WhiteBalanceFineTune      exif.FieldName = "Fujifilm.WhiteBalanceFineTune"
+	Fujifilm_Clarity                   exif.FieldName = "Fujifilm.Clarity"
+	Fujifilm_FlashStrength             exif.FieldName = "Fujifilm.FlashStrength"
+	Fujifilm_FocusPrioritySetting      exif.FieldName = "Fujifilm.FocusPrioritySetting"
+	Fujifilm_FocusSetting              exif.FieldName = "Fujifilm.FocusSetting"
+	Fujifilm_ContinuousFocusSetting    exif.FieldName = "Fujifilm.ContinuousFocusSetting"
+	Fujifilm_EXRAuto                   exif.FieldName = "Fujifilm.EXRAuto"
+	Fujifilm_EXRMode                   exif.FieldName = "Fujifilm.EXRMode"
+	Fujifilm_ShadowTone                exif.FieldName = "Fujifilm.ShadowTone"
+	Fujifilm_HighlightTone             exif.FieldName = "Fujifilm.HighlightTone"
+	Fujifilm_LensModulationOptimizer   exif.FieldName = "Fujifilm.LensModulationOptimizer"
+	Fujifilm_GrainEffectRoughness      exif.FieldName = "Fujifilm.GrainEffectRoughness"
+	Fujifilm_ColorChromeEffect         exif.FieldName = "Fujifilm.ColorChromeEffect"
+	Fujifilm_MonochromaticColorWC      exif.FieldName = "Fujifilm.MonochromaticColorWC"
+	Fujifilm_MonochromaticColorMG      exif.FieldName = "Fujifilm.MonochromaticColorMG"
+	Fujifilm_GrainEffectSize           exif.FieldName = "Fujifilm.GrainEffectSize"
+	Fujifilm_CropMode                  exif.FieldName = "Fujifilm.CropMode"
+	Fujifilm_ColorChromeFXBlue         exif.FieldName = "Fujifilm.ColorChromeFXBlue"
+	Fujifilm_Continuous                exif.FieldName = "Fujifilm.Continuous"
+	Fujifilm_SequenceNumber            exif.FieldName = "Fujifilm.SequenceNumber"
+	Fujifilm_DriveSetting              exif.FieldName = "Fujifilm.DriveSetting"
+	Fujifilm_PixelShiftShots           exif.FieldName = "Fujifilm.PixelShiftShots"
+	Fujifilm_PixelShiftOfffset         exif.FieldName = "Fujifilm.PixelShiftOfffset"
+	Fujifilm_PanoramaAngle             exif.FieldName = "Fujifilm.PanoramaAngle"
+	Fujifilm_PanoramaDirection         exif.FieldName = "Fujifilm.PanoramaDirection"
+	Fujifilm_AdvancedFilter            exif.FieldName = "Fujifilm.AdvancedFilter"
+	Fujifilm_FinePixColor              exif.FieldName = "Fujifilm.FinePixColor"
+	Fujifilm_BlurWarning               exif.FieldName = "Fujifilm.BlurWarning"
+	Fujifilm_FocusWarning              exif.FieldName = "Fujifilm.FocusWarning"
+	Fujifilm_ExposureWarning           exif.FieldName = "Fujifilm.ExposureWarning"
+	Fujifilm_DynamicRangeSetting       exif.FieldName = "Fujifilm.DynamicRangeSetting"
+	Fujifilm_DevelopmentDynamicRange   exif.FieldName = "Fujifilm.DevelopmentDynamicRange"
+	Fujifilm_MinFocalLength            exif.FieldName = "Fujifilm.MinFocalLength"
+	Fujifilm_MaxFocalLength            exif.FieldName = "Fujifilm.MaxFocalLength"
+	Fujifilm_MaxApertureAtMinFocal     exif.FieldName = "Fujifilm.MaxApertureAtMinFocal"
+	Fujifilm_MaxApertureAtMaxFocal     exif.FieldName = "Fujifilm.MaxApertureAtMaxFocal"
+	Fujifilm_AutoDynamicRange          exif.FieldName = "Fujifilm.AutoDynamicRange"
+	Fujifilm_SceneRecognition          exif.FieldName = "Fujifilm.SceneRecognition"
+	Fujifilm_ImageGeneration           exif.FieldName = "Fujifilm.ImageGeneration"
+	Fujifilm_DRangePriority            exif.FieldName = "Fujifilm.DRangePriority"
+	Fujifilm_DRangePriorityFixed       exif.FieldName = "Fujifilm.DRangePriorityFixed"
+	Fujifilm_DRangePriorityAuto        exif.FieldName = "Fujifilm.DRangePriorityAuto"
+	Fujifilm_FaceElementSelected       exif.FieldName = "Fujifilm.FaceElementSelected"
+	Fujifilm_FacesDetected             exif.FieldName = "Fujifilm.FacesDetected"
+	Fujifilm_FacePositions             exif.FieldName = "Fujifilm.FacePositions"
+	Fujifilm_NumberFaceElements        exif.FieldName = "Fujifilm.NumberFaceElements"
+	Fujifilm_FaceElementTypes          exif.FieldName = "Fujifilm.FaceElementTypes"
+	Fujifilm_FaceElementPositions      exif.FieldName = "Fujifilm.FaceElementPositions"
+	Fujifilm_FaceRecInfo               exif.FieldName = "Fujifilm.FaceRecInfo"
+	Fujifilm_OrderNumber               exif.FieldName = "Fujifilm.OrderNumber"
+	Fujifilm_WhiteBalance              exif.FieldName = "Fujifilm.WhiteBalance"
+	Fujifilm_Color                     exif.FieldName = "Fujifilm.Color"
+	Fujifilm_Tone                      exif.FieldName = "Fujifilm.Tone"
+	Fujifilm_Contrast                  exif.FieldName = "Fujifilm.Contrast"
+	Fujifilm_Macro                     exif.FieldName = "Fujifilm.Macro"
+	Fujifilm_FocusMode                 exif.FieldName = "Fujifilm.FocusMode"
+	Fujifilm_FocusArea                 exif.FieldName = "Fujifilm.FocusArea"
+	Fujifilm_FocusPoint                exif.FieldName = "Fujifilm.FocusPoint"
+	Fujifilm_SlowSync                  exif.FieldName = "Fujifilm.SlowSync"
+	Fujifilm_PictureMode               exif.FieldName = "Fujifilm.PictureMode"
+	Fujifilm_ExposureCount             exif.FieldName = "Fujifilm.ExposureCount"
+	Fujifilm_ShutterType               exif.FieldName = "Fujifilm.ShutterType"
+	Fujifilm_DynamicRange              exif.FieldName = "Fujifilm.DynamicRange"
+	Fujifilm_FilmMode                  exif.FieldName = "Fujifilm.FilmMode"
+	Fujifilm_Rating                    exif.FieldName = "Fujifilm.Rating"
+	Fujifilm_ImageNumber               exif.FieldName = "Fujifilm.ImageNumber"
+	Fujifilm_FileSource                exif.FieldName = "Fujifilm.FileSource"
+	Fujifilm_FrameNumber               exif.FieldName = "Fujifilm.FrameNumber"
+	Fujifilm_FujiIFD                   exif.FieldName = "Fujifilm.FujiIFD"
+	Fujifilm_RawImageFullWidth         exif.FieldName = "Fujifilm.RawImageFullWidth"
+	Fujifilm_RawImageFullHeight        exif.FieldName = "Fujifilm.RawImageFullHeight"
+	Fujifilm_BitsPerSample             exif.FieldName = "Fujifilm.BitsPerSample"
+	Fujifilm_StripOffsets              exif.FieldName = "Fujifilm.StripOffsets"
+	Fujifilm_StripByteCounts           exif.FieldName = "Fujifilm.StripByteCounts"
+	Fujifilm_BlackLevel                exif.FieldName = "Fujifilm.BlackLevel"
+	Fujifilm_GeometricDistortionParams exif.FieldName = "Fujifilm.GeometricDistortionParams"
+	Fujifilm_WB_GRBLevelsStandard      exif.FieldName = "Fujifilm.WB_GRBLevelsStandard"
+	Fujifilm_WB_GRBLevelsAuto          exif.FieldName = "Fujifilm.WB_GRBLevelsAuto"
+	Fujifilm_WB_GRBLevels              exif.FieldName = "Fujifilm.WB_GRBLevels"
+	Fujifilm_ChromaticAberrationParams exif.FieldName = "Fujifilm.ChromaticAberrationParams"
+	Fujifilm_VignettingParams          exif.FieldName = "Fujifilm.VignettingParams"
+	Fujifilm_FlickerReduction          exif.FieldName = "Fujifilm.FlickerReduction"
+	Fujifilm_FujiModel                 exif.FieldName = "Fujifilm.FujiModel"
+	Fujifilm_FujiModel2                exif.FieldName = "Fujifilm.FujiModel2"
 )
 
 var makerNoteCanonFields = map[uint16]exif.FieldName{
@@ -267,4 +357,100 @@ var makerNoteNikon3Fields = map[uint16]exif.FieldName{
 	0x0e10: ScanIFD,
 	0x0e1d: ICCProfile,
 	0x0e1e: CaptureOutput,
+}
+
+var makerNoteFujifilmFields = map[uint16]exif.FieldName{
+	0x0000: Fujifilm_Version,
+	0x0010: Fujifilm_SerialNumber,
+	0x1000: Quality,
+	0x1001: Fujifilm_Sharpness,
+	0x1002: Fujifilm_WhiteBalance,
+	0x1003: Fujifilm_Color,
+	0x1004: Fujifilm_Tone,
+	0x1005: Fujifilm_ColorTemperature,
+	0x1006: Fujifilm_Contrast,
+	0x100a: Fujifilm_WhiteBalanceFineTune,
+	0x100b: NoiseReduction,
+	0x100e: HighISONoiseReduction,
+	0x100f: Fujifilm_Clarity,
+	0x1010: FlashMode,
+	0x1011: Fujifilm_FlashStrength,
+	0x1020: Fujifilm_Macro,
+	0x1021: Fujifilm_FocusMode,
+	0x1022: Fujifilm_FocusArea,
+	0x1023: Fujifilm_FocusPoint,
+	0x102b: Fujifilm_FocusPrioritySetting,
+	0x102d: Fujifilm_FocusSetting,
+	0x102e: Fujifilm_ContinuousFocusSetting,
+	0x1030: Fujifilm_SlowSync,
+	0x1031: Fujifilm_PictureMode,
+	0x1032: Fujifilm_ExposureCount,
+	0x1033: Fujifilm_EXRAuto,
+	0x1034: Fujifilm_EXRMode,
+	0x1040: Fujifilm_ShadowTone,
+	0x1041: Fujifilm_HighlightTone,
+	0x1044: DigitalZoom,
+	0x1045: Fujifilm_LensModulationOptimizer,
+	0x1047: Fujifilm_GrainEffectRoughness,
+	0x1048: Fujifilm_ColorChromeEffect,
+	0x1049: Fujifilm_MonochromaticColorWC,
+	0x104b: Fujifilm_MonochromaticColorMG,
+	0x104c: Fujifilm_GrainEffectSize,
+	0x104d: Fujifilm_CropMode,
+	0x104e: Fujifilm_ColorChromeFXBlue,
+	0x1050: Fujifilm_ShutterType,
+	0x1100: Fujifilm_Continuous,
+	0x1101: Fujifilm_SequenceNumber,
+	0x1103: Fujifilm_DriveSetting,
+	0x1105: Fujifilm_PixelShiftShots,
+	0x1153: Fujifilm_PanoramaAngle,
+	0x1154: Fujifilm_PanoramaDirection,
+	0x1201: Fujifilm_AdvancedFilter,
+	0x1210: Fujifilm_FinePixColor,
+	0x1300: Fujifilm_BlurWarning,
+	0x1301: Fujifilm_FocusWarning,
+	0x1302: Fujifilm_ExposureWarning,
+	0x1400: Fujifilm_DynamicRange,
+	0x1401: Fujifilm_FilmMode,
+	0x1402: Fujifilm_DynamicRangeSetting,
+	0x1403: Fujifilm_DevelopmentDynamicRange,
+	0x1404: Fujifilm_MinFocalLength,
+	0x1405: Fujifilm_MaxFocalLength,
+	0x1406: Fujifilm_MaxApertureAtMinFocal,
+	0x1407: Fujifilm_MaxApertureAtMaxFocal,
+	0x140b: Fujifilm_AutoDynamicRange,
+	0x1422: ImageStabilization,
+	0x1425: Fujifilm_SceneRecognition,
+	0x1431: Fujifilm_Rating,
+	0x1436: Fujifilm_ImageGeneration,
+	0x1438: Fujifilm_ImageNumber,
+	0x1443: Fujifilm_DRangePriority,
+	0x1444: Fujifilm_DRangePriorityFixed,
+	0x1445: Fujifilm_DRangePriorityAuto,
+	0x1446: Fujifilm_FlickerReduction,
+	0x1447: Fujifilm_FujiModel,
+	0x1448: Fujifilm_FujiModel2,
+	0x4005: Fujifilm_FaceElementSelected,
+	0x4100: Fujifilm_FacesDetected,
+	0x4103: Fujifilm_FacePositions,
+	0x4200: Fujifilm_NumberFaceElements,
+	0x4201: Fujifilm_FaceElementTypes,
+	0x4203: Fujifilm_FaceElementPositions,
+	0x4282: Fujifilm_FaceRecInfo,
+	0x8000: Fujifilm_FileSource,
+	0x8002: Fujifilm_OrderNumber,
+	0x8003: Fujifilm_FrameNumber,
+	0xf000: Fujifilm_FujiIFD,
+	0xf001: Fujifilm_RawImageFullWidth,
+	0xf002: Fujifilm_RawImageFullHeight,
+	0xf003: Fujifilm_BitsPerSample,
+	0xf007: Fujifilm_StripOffsets,
+	0xf008: Fujifilm_StripByteCounts,
+	0xf00a: Fujifilm_BlackLevel,
+	0xf00b: Fujifilm_GeometricDistortionParams,
+	0xf00c: Fujifilm_WB_GRBLevelsStandard,
+	0xf00d: Fujifilm_WB_GRBLevelsAuto,
+	0xf00e: Fujifilm_WB_GRBLevels,
+	0xf00f: Fujifilm_ChromaticAberrationParams,
+	0xf010: Fujifilm_VignettingParams,
 }
