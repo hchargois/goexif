@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
+	"strings"
 
 	"github.com/hchargois/goexif/exif"
 	"github.com/hchargois/goexif/mknote"
@@ -46,15 +48,31 @@ func main() {
 			return
 		}
 
-		fmt.Printf("\n---- Image '%v' ----\n", name)
-		x.Walk(Walker{})
+		if len(fnames) > 1 {
+			fmt.Printf("---- Image '%v' ----\n", name)
+		}
+
+		tags := x.Tags()
+		nts := make([]namedTag, 0, len(tags))
+		longestName := 0
+		for name, tag := range tags {
+			if len(name) > longestName {
+				longestName = len(name)
+			}
+			nts = append(nts, namedTag{name, tag})
+		}
+		slices.SortFunc(nts, func(a, b namedTag) int {
+			return strings.Compare(string(a.name), string(b.name))
+		})
+
+		for _, nt := range nts {
+			data, _ := nt.tag.MarshalJSON()
+			fmt.Printf("    %-*s : %v\n", longestName, nt.name, string(data))
+		}
 	}
 }
 
-type Walker struct{}
-
-func (_ Walker) Walk(name exif.FieldName, tag *tiff.Tag) error {
-	data, _ := tag.MarshalJSON()
-	fmt.Printf("    %v: %v\n", name, string(data))
-	return nil
+type namedTag struct {
+	name exif.FieldName
+	tag  *tiff.Tag
 }
