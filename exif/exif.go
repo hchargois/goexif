@@ -555,6 +555,11 @@ func (x *Exif) String() string {
 	return buf.String()
 }
 
+// Tags returns the map of all decoded EXIF tags.
+func (x *Exif) Tags() map[FieldName]*tiff.Tag {
+	return x.main
+}
+
 // JpegThumbnail returns the jpeg thumbnail if it exists. If it doesn't exist,
 // TagNotPresentError will be returned
 func (x *Exif) JpegThumbnail() ([]byte, error) {
