@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -24,6 +25,9 @@ func main() {
 		exif.RegisterParsers(mknote.All...)
 	}
 
+	out := bufio.NewWriter(os.Stdout)
+	defer out.Flush()
+
 	for _, name := range fnames {
 		f, err := os.Open(name)
 		if err != nil {
@@ -42,14 +46,14 @@ func main() {
 			if err != nil {
 				log.Fatal("no thumbnail present")
 			}
-			if _, err := os.Stdout.Write(data); err != nil {
+			if _, err := out.Write(data); err != nil {
 				log.Fatal(err)
 			}
 			return
 		}
 
 		if len(fnames) > 1 {
-			fmt.Printf("---- Image '%v' ----\n", name)
+			fmt.Fprintf(out, "---- Image '%v' ----\n", name)
 		}
 
 		tags := x.Tags()
@@ -67,7 +71,7 @@ func main() {
 
 		for _, nt := range nts {
 			data, _ := nt.tag.MarshalJSON()
-			fmt.Printf("    %-*s : %v\n", longestName, nt.name, string(data))
+			fmt.Fprintf(out, "    %-*s : %v\n", longestName, nt.name, string(data))
 		}
 	}
 }
